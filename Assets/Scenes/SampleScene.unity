@@ -1208,6 +1208,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameDirector
   uiManager: {fileID: 1164796307}
   levelManager: {fileID: 1549668623}
+  player: {fileID: 2102212454}
 --- !u!1 &2102212451
 GameObject:
   m_ObjectHideFlags: 0
@@ -1278,6 +1279,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94ff49077fb6fab44adebe94a117d8ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
+  speed: 5
 --- !u!54 &2102212455
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1303,7 +1305,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
