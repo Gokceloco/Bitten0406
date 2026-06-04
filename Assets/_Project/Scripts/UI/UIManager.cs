@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
     public MainMenu mainMenu;
     public void ShowMainMenu()
     {
+        gameDirector.gameState = GameState.MainMenu;
         mainMenu.Show();
     }
 

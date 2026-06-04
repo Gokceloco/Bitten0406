@@ -8,6 +8,8 @@ public class GameDirector : MonoBehaviour
     public LevelManager levelManager;
     public Player player;
 
+    public GameState gameState;
+
     void Start()
     {
         uiManager.ShowMainMenu();
@@ -43,7 +45,14 @@ public class GameDirector : MonoBehaviour
 
     public void RestartLevel()
     {
+        gameState = GameState.GamePlay;
         levelManager.RestartLevelManager();
         player.RestartPlayer();
     }    
+}
+
+public enum GameState
+{
+    MainMenu,
+    GamePlay,
 }
