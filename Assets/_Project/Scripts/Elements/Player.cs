@@ -15,6 +15,9 @@ public class Player : MonoBehaviour
 
     [SerializeField] private Camera mainCamera;
     [SerializeField] private LayerMask lookLayerMask;
+    [SerializeField] private LayerMask jumpLayerMask;
+
+    [SerializeField] private float jumpPower;
 
     private void Awake()
     {
@@ -30,6 +33,20 @@ public class Player : MonoBehaviour
     {
         MovePlayer();
         LookAtMouse();
+        Jump();
+    }
+
+    bool IsGrounded()
+    {
+        return Physics.Raycast(transform.position + Vector3.up * .5f, Vector3.down, 1, jumpLayerMask);        
+    }
+
+    private void Jump()
+    {
+        if (Keyboard.current.spaceKey.wasPressedThisFrame && IsGrounded())
+        {
+            _rb.AddForce(Vector3.up * jumpPower);
+        }
     }
 
     private void LookAtMouse()
@@ -38,7 +55,9 @@ public class Player : MonoBehaviour
 
         if (Physics.Raycast(ray, out var hit, 50, lookLayerMask))
         {
-            transform.LookAt(hit.point);
+            var lookPos = hit.point;
+            lookPos.y = transform.position.y;
+            transform.LookAt(lookPos);
         }
     }
 
