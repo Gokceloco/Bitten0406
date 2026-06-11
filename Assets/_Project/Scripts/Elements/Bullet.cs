@@ -16,7 +16,7 @@ public class Bullet : MonoBehaviour
         transform.position += transform.forward * speed * Time.deltaTime;
 
         var distance = (transform.position - _spawnPosition).magnitude;
-        if (distance > 50)
+        if (distance > 25)
         {
             DestroyBullet();
         }

@@ -19,6 +19,12 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float jumpPower;
 
+    [SerializeField] private int startHealth;
+    private int _currentHealth;
+    [SerializeField] private HealthBar healthBar;
+
+    public Light spotLight;
+
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
@@ -27,6 +33,7 @@ public class Player : MonoBehaviour
     {
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
         transform.position = Vector3.zero;
+        _currentHealth = startHealth;
     }
 
     private void Update()
@@ -34,6 +41,22 @@ public class Player : MonoBehaviour
         MovePlayer();
         LookAtMouse();
         Jump();
+        
+    }
+
+    public void GetHit(int damage)
+    {
+        _currentHealth -= damage;
+        healthBar.SetFillBar(startHealth, _currentHealth);
+        if (_currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        gameObject.SetActive(false);
     }
 
     bool IsGrounded()
