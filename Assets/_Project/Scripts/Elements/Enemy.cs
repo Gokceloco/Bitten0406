@@ -25,6 +25,16 @@ public class Enemy : MonoBehaviour
 
     private bool _isAttacking;
 
+    [SerializeField] private Animator animator;
+
+    private AnimationState _currentAnimationState;
+
+    private bool _didSeePlayer;
+
+    private bool _isDead;
+
+    [SerializeField] private Collider col;
+
     public void StartEnemy()
     {
         _currentHealth = startHealth;
@@ -33,6 +43,11 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
+        if (_isDead)
+        {
+            agent.isStopped = true;
+            return;
+        }
         //Decision
         var distance = (_player.transform.position - transform.position).magnitude;
         if (distance < attackDistance)
@@ -41,7 +56,19 @@ public class Enemy : MonoBehaviour
         }
         else if (distance < 10 && !_isAttacking)
         {
+            _didSeePlayer = true;
             _actionState = ActionState.Walk;
+        }
+        else if (!_isAttacking)
+        {
+            if (_didSeePlayer)
+            {
+                _actionState = ActionState.Walk;
+            }
+            else
+            {
+                _actionState = ActionState.Idle;
+            }
         }
 
         //Action
@@ -49,6 +76,7 @@ public class Enemy : MonoBehaviour
         {
             agent.isStopped = false;
             agent.SetDestination(_player.transform.position);
+            ChangeAnimationState(AnimationState.Walk);
         }
         else if (_actionState == ActionState.Attack && !_isAttacking)
         {
@@ -56,14 +84,26 @@ public class Enemy : MonoBehaviour
             _isAttacking = true;
             StartCoroutine(AttackCoroutine());
         }
-        else
+        else if (!_isAttacking)
         {
+            ChangeAnimationState(AnimationState.Idle);
             agent.isStopped = true;
+        }
+    }
+
+    void ChangeAnimationState(AnimationState desiredState)
+    {
+        if (desiredState != _currentAnimationState)
+        {
+            _currentAnimationState = desiredState;
+            animator.Play(desiredState.ToString());
         }
     }
 
     IEnumerator AttackCoroutine()
     {
+        animator.Play("Attack", -1, 0);
+        _currentAnimationState = AnimationState.Attack;
         transform.LookAt(_player.transform.position);
 
         yield return new WaitForSeconds(2);
@@ -92,7 +132,17 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
-        Destroy(gameObject);
+        col.enabled = false;
+        _isDead = true;
+        ChangeAnimationState(AnimationState.Die);
+        Destroy(gameObject, 3);
     }
 }
 
+public enum AnimationState
+{
+    Idle,
+    Walk,
+    Attack,
+    Die
+}

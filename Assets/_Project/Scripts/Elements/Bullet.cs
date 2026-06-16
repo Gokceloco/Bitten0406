@@ -29,6 +29,10 @@ public class Bullet : MonoBehaviour
             DestroyBullet();
             collision.gameObject.GetComponent<Enemy>().GetHit(1);
         }
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            DestroyBullet();
+        }
     }
 
     private void DestroyBullet()
