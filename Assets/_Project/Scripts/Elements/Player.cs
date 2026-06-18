@@ -25,6 +25,10 @@ public class Player : MonoBehaviour
 
     public Light spotLight;
 
+    [SerializeField] private Animator animator;
+
+    private PlayerAnimationState _currentAnimationState;
+
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
@@ -107,6 +111,14 @@ public class Player : MonoBehaviour
 
         var yVelocity = _rb.linearVelocity.y;
 
+        if (_dir == Vector3.zero)
+        {
+            ChangeAnimationState(PlayerAnimationState.Idle);
+        }
+        else
+        {
+            ChangeAnimationState(PlayerAnimationState.Run);
+        }
 
         if (Keyboard.current.leftShiftKey.isPressed)
         {
@@ -116,5 +128,23 @@ public class Player : MonoBehaviour
         {
             _rb.linearVelocity = _dir * speed + Vector3.up * yVelocity;
         }
+
+        var angle = Vector3.SignedAngle(_dir, transform.forward, Vector3.up);
+        animator.SetFloat("Blend", angle);
     }
+
+    void ChangeAnimationState(PlayerAnimationState key)
+    {
+        if (_currentAnimationState != key)
+        {
+            _currentAnimationState = key;
+            animator.SetTrigger(key.ToString());
+        }
+    }
+}
+
+public enum PlayerAnimationState
+{
+    Idle,
+    Run,
 }

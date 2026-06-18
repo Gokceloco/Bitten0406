@@ -8,6 +8,9 @@ public class GameDirector : MonoBehaviour
     public LevelManager levelManager;
     public Player player;
 
+    public AudioManager audioManager;
+    public FXManager fXManager;
+
     public GameState gameState;
 
     void Start()

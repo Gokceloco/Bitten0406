@@ -6,9 +6,12 @@ public class Bullet : MonoBehaviour
     [SerializeField] private float speed;
     private Vector3 _spawnPosition;
 
-    private void Start()
+    private GameDirector _gameDirector;
+
+    public void StartBullet(GameDirector gameDirector)
     {
         _spawnPosition = transform.position;
+        _gameDirector = gameDirector;
     }
 
     private void Update()
@@ -28,6 +31,7 @@ public class Bullet : MonoBehaviour
         {
             DestroyBullet();
             collision.gameObject.GetComponent<Enemy>().GetHit(1);
+            _gameDirector.fXManager.PlayImpactPS(transform.position, transform.forward);
         }
         if (collision.gameObject.CompareTag("Ground"))
         {
