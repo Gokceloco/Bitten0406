@@ -13,6 +13,8 @@ public class GameDirector : MonoBehaviour
 
     public GameState gameState;
 
+    public TimerManager timerManager;
+
     void Start()
     {
         uiManager.ShowMainMenu();
@@ -51,6 +53,7 @@ public class GameDirector : MonoBehaviour
         gameState = GameState.GamePlay;
         levelManager.RestartLevelManager();
         player.RestartPlayer();
+        timerManager.StartTimer(levelManager.ReturnCurrentLevel().levelTime);
     }    
 
     public void LevelCompleted()

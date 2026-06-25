@@ -153,7 +153,7 @@ public class Player : MonoBehaviour
         var angle = Vector3.SignedAngle(_dir, transform.forward, Vector3.up);
         animator.SetFloat("Blend", angle);
     }
-    void ChangeAnimationState(PlayerAnimationState key)
+    public void ChangeAnimationState(PlayerAnimationState key)
     {
         if (_currentAnimationState != key)
         {

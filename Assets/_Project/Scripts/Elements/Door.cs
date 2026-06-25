@@ -7,15 +7,41 @@ public class Door : MonoBehaviour
     [SerializeField] private Transform doorLeft;
     [SerializeField] private Transform doorRight;
 
+    private bool _isOpen;
+    private bool _isPlayerInRange;
+
     private void Update()
     {
-        if (Keyboard.current.bKey.wasPressedThisFrame)
+        if (Keyboard.current.eKey.wasPressedThisFrame 
+            && _isPlayerInRange 
+            && GetComponentInParent<Level>().ReturnEnemyCount() == 0)
         {
-            OpenDoor();
+            if (_isOpen)
+            {
+                CloseDoor();
+                _isOpen = false;
+            }
+            else
+            {
+                OpenDoor();
+                _isOpen = true;
+            }
         }
-        if (Keyboard.current.vKey.wasPressedThisFrame)
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
         {
-            CloseDoor();
+            _isPlayerInRange = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            _isPlayerInRange = false;
         }
     }
 

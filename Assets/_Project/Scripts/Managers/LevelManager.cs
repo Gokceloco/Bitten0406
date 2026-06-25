@@ -28,4 +28,9 @@ public class LevelManager : MonoBehaviour
             Destroy(_currentLevel.gameObject);
         }
     }
+
+    public Level ReturnCurrentLevel()
+    {        
+        return _currentLevel;
+    }
 }
