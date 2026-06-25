@@ -6,8 +6,8 @@ public class FXManager : MonoBehaviour
 
     public void PlayImpactPS(Vector3 pos, Vector3 dir)
     {
-        var newPS = Instantiate(impactPS);
-        newPS.transform.position = pos;
+        var newPS = Instantiate(impactPS, transform);
+        newPS.transform.position = pos + dir;
         newPS.transform.LookAt(pos - dir);
         newPS.Play();
     }

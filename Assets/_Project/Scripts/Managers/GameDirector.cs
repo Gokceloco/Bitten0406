@@ -40,7 +40,7 @@ public class GameDirector : MonoBehaviour
         RestartLevel();
     }
 
-    private void LoadNextLevel()
+    public void LoadNextLevel()
     {
         levelManager.levelNo++;
         RestartLevel();
@@ -52,10 +52,23 @@ public class GameDirector : MonoBehaviour
         levelManager.RestartLevelManager();
         player.RestartPlayer();
     }    
+
+    public void LevelCompleted()
+    {
+        gameState = GameState.WinUI;
+        uiManager.ShowVictoryUI();
+    }
+    public void LevelFailed()
+    {
+        gameState = GameState.FailUI;
+        uiManager.ShowFailUI();
+    }
 }
 
 public enum GameState
 {
     MainMenu,
     GamePlay,
+    FailUI,
+    WinUI,
 }

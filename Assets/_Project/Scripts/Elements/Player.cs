@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    #region References
     public GameDirector gameDirector;
 
     private Vector3 _dir;
@@ -26,6 +27,7 @@ public class Player : MonoBehaviour
     public Light spotLight;
 
     [SerializeField] private Animator animator;
+    #endregion
 
     private PlayerAnimationState _currentAnimationState;
 
@@ -35,21 +37,44 @@ public class Player : MonoBehaviour
     }
     public void RestartPlayer()
     {
+        gameObject.SetActive(true);
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
         transform.position = Vector3.zero;
         _currentHealth = startHealth;
     }
-
     private void Update()
     {
+        if (gameDirector.gameState != GameState.GamePlay)
+        {
+            _rb.linearVelocity = Vector3.zero;
+            if (gameDirector.gameState == GameState.WinUI)
+            {
+                ChangeAnimationState(PlayerAnimationState.Idle);
+            }
+            return;
+        }
         MovePlayer();
         LookAtMouse();
         Jump();
-        
+        if (transform.position.y < -10)
+        {
+            gameDirector.LevelFailed();
+        }
     }
-
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Potion"))
+        {
+            gameDirector.LevelCompleted();
+            other.gameObject.SetActive(false);
+        }
+    }
     public void GetHit(int damage)
     {
+        if (gameDirector.gameState != GameState.GamePlay)
+        {
+            return;
+        }
         _currentHealth -= damage;
         healthBar.SetFillBar(startHealth, _currentHealth);
         if (_currentHealth <= 0)
@@ -57,17 +82,15 @@ public class Player : MonoBehaviour
             Die();
         }
     }
-
     private void Die()
-    {
-        gameObject.SetActive(false);
+    {        
+        gameDirector.LevelFailed();
+        ChangeAnimationState(PlayerAnimationState.Die);
     }
-
     bool IsGrounded()
     {
         return Physics.Raycast(transform.position + Vector3.up * .5f, Vector3.down, 1, jumpLayerMask);        
     }
-
     private void Jump()
     {
         if (Keyboard.current.spaceKey.wasPressedThisFrame && IsGrounded())
@@ -75,7 +98,6 @@ public class Player : MonoBehaviour
             _rb.AddForce(Vector3.up * jumpPower);
         }
     }
-
     private void LookAtMouse()
     {
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
@@ -87,7 +109,6 @@ public class Player : MonoBehaviour
             transform.LookAt(lookPos);
         }
     }
-
     private void MovePlayer()
     {
         _dir = Vector3.zero;
@@ -132,7 +153,6 @@ public class Player : MonoBehaviour
         var angle = Vector3.SignedAngle(_dir, transform.forward, Vector3.up);
         animator.SetFloat("Blend", angle);
     }
-
     void ChangeAnimationState(PlayerAnimationState key)
     {
         if (_currentAnimationState != key)
@@ -147,4 +167,5 @@ public enum PlayerAnimationState
 {
     Idle,
     Run,
+    Die,
 }

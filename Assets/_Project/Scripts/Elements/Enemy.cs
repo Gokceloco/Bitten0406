@@ -102,11 +102,12 @@ public class Enemy : MonoBehaviour
 
     IEnumerator AttackCoroutine()
     {
-        animator.Play("Attack", -1, 0);
+        animator.CrossFade("Attack", .25f, -1, 0, 0);
+        
         _currentAnimationState = AnimationState.Attack;
         transform.LookAt(_player.transform.position);
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1.75f);
 
         var forwardVector = transform.forward;
         var playerVector = _player.transform.position - transform.position;

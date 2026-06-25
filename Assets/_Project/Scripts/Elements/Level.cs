@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Level : MonoBehaviour
 {
@@ -8,5 +9,19 @@ public class Level : MonoBehaviour
         {
             e.StartEnemy();
         }
+    }
+
+    private void Update()
+    {
+        if (Keyboard.current.mKey.wasPressedThisFrame)
+        {
+            print(ReturnEnemyCount());
+        }
+    }
+
+    public int ReturnEnemyCount()
+    {
+        return GetComponentsInChildren<Enemy>().Length;
+        
     }
 }
