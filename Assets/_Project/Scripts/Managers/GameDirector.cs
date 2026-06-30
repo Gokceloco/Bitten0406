@@ -1,4 +1,5 @@
 using System;
+using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,7 +18,13 @@ public class GameDirector : MonoBehaviour
 
     void Start()
     {
+        LoadPersistanceData();
         uiManager.ShowMainMenu();
+    }
+
+    private void LoadPersistanceData()
+    {
+        levelManager.levelNo = PlayerPrefs.GetInt("HighestLevelCompleted") + 1;
     }
 
     private void Update()
@@ -54,17 +61,32 @@ public class GameDirector : MonoBehaviour
         levelManager.RestartLevelManager();
         player.RestartPlayer();
         timerManager.StartTimer(levelManager.ReturnCurrentLevel().levelTime);
-    }    
+        uiManager.ShowInGameUI();
+        uiManager.levelNoUI.SetLevelNo(levelManager.levelNo);
+        if(levelManager.levelNo == 1)
+        {
+            uiManager.messageUI.Show("WASD To Move!", 2f);
+        }
+    }
 
     public void LevelCompleted()
     {
         gameState = GameState.WinUI;
-        uiManager.ShowVictoryUI();
+        if (levelManager.levelNo == levelManager.GetLevelsCount())
+        {
+            uiManager.ShowCreditsUI();
+        }
+        else
+        {
+            uiManager.ShowVictoryUI();
+        }
+        PlayerPrefs.SetInt("HighestLevelCompleted", levelManager.levelNo);
+        levelManager.GetCurrentLevel().GetComponent<NavMeshSurface>().RemoveData();
     }
     public void LevelFailed()
     {
         gameState = GameState.FailUI;
-        uiManager.ShowFailUI();
+        uiManager.ShowFailUI();        
     }
 }
 

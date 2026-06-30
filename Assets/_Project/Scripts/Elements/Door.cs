@@ -27,6 +27,11 @@ public class Door : MonoBehaviour
                 _isOpen = true;
             }
         }
+        else if (Keyboard.current.eKey.wasPressedThisFrame
+                && _isPlayerInRange)
+        {
+            GetComponentInParent<LevelManager>().gameDirector.uiManager.messageUI.Show("CLEAR LEVEL TO OPEN!", 2);
+        }
     }
 
     private void OnTriggerEnter(Collider other)

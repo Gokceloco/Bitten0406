@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
+    public GameDirector gameDirector;
     public int levelNo;
 
     [SerializeField] private List<Level> levels;
@@ -18,7 +20,7 @@ public class LevelManager : MonoBehaviour
 
     private void CreateNewLevel()
     {
-        _currentLevel = Instantiate(levels[levelNo - 1]);
+        _currentLevel = Instantiate(levels[levelNo - 1], transform);
     }
 
     private void DeleteOldLevel()
@@ -32,5 +34,15 @@ public class LevelManager : MonoBehaviour
     public Level ReturnCurrentLevel()
     {        
         return _currentLevel;
+    }
+
+    internal Level GetCurrentLevel()
+    {
+        return _currentLevel;
+    }
+
+    internal int GetLevelsCount()
+    {
+        return levels.Count;
     }
 }
